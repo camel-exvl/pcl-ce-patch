@@ -1,0 +1,11 @@
+{
+  "version": "2.15.1-restored.1",
+  "revision": 1,
+  "upstreamTag": "v2.15.1",
+  "upstreamCommit": "1a7653127d578efdb2a9388999a3fdc67d9e49d5",
+  "repository": "camel-exvl/pcl-ce-patch",
+  "officialAssets": {
+    "PCL2_CE_Release_x64.exe": "168bd8369d5ed4e5478942677562913330ef1d30a5193870af910bd18198050c",
+    "PCL2_CE_Release_x64.exe.sigstore.json": "1945388e1955283c4fa9112a8378d4d445c0ee44242ab4246a6f3fdf7fd01a13"
+  }
+}

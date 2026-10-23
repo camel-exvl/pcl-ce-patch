@@ -1,7 +1,0 @@
-{
-  "upstreamRepository": "PCL-Community/PCL-CE",
-  "repository": "camel-exvl/pcl-ce-patch",
-  "patchRevision": 1,
-  "profile": "profiles/upstream-v2.15.1.json",
-  "upstreamSigstoreIdentity": "https://github.com/PCL-Community/PCL-CE/.github/workflows/release-publish.yml@refs/heads/dev"
-}
