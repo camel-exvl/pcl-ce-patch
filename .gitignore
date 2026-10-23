@@ -1,0 +1,7 @@
+.tools/
+artifacts/
+**/bin/
+**/obj/
+__pycache__/
+*.user
+.vs/
