@@ -6,7 +6,7 @@ PCL 原作者为 [龙腾猫跃](https://afdian.com/a/LTCat)，PCL-CE 由 [PCL Co
 
 ## 下载与更新
 
-从本仓库 [Releases](https://github.com/camel-exvl/pcl-ce-patch/releases) 下载对应架构的 `PCL_CE_Restore_x64.exe` 或 `PCL_CE_Restore_ARM64.exe`，关闭旧启动器后放入原有启动器目录使用。需要与官方版相同的 .NET 10 Desktop Runtime。
+从本仓库 [Releases](https://github.com/camel-exvl/pcl-ce-patch/releases) 下载`PCL_CE_Restore_x64.exe`，关闭旧启动器后放入原有启动器目录使用。需要与官方版相同的 .NET 10 Desktop Runtime。
 
 补丁版的程序内更新只从本仓库 `updates` 分支读取更新信息。稳定和 Beta 设置均跟踪稳定补丁版；不会回退到官方原版。更新源不可达时，现有程序继续使用，更新检查报告失败。首次运行仍会显示与官方版相同的初始化、购买和赞助提示。
 
@@ -15,14 +15,14 @@ PCL 原作者为 [龙腾猫跃](https://afdian.com/a/LTCat)，PCL-CE 由 [PCL Co
 ## 实现与发布流程
 
 1. 每六小时和手动触发时检查官方最新稳定 Release；修改工具、适配规则或工作流并推送 `main` 也会触发检查。
-2. 下载官方 x64、ARM64 exe 及 Sigstore 证明，同时验证官方资产 SHA-256 和上游工作流身份。
+2. 下载官方 x64 exe 及 Sigstore 证明，同时验证官方资产 SHA-256 和上游工作流身份。
 3. 使用原 exe 作为 .NET Bundle 模板，只修改主程序集内四个方法及版本元数据。`PCL.Core.dll` 和其他捆绑文件逐字节保留。没有提取、记录或重新注入微软登录、CurseForge 等服务凭据。
-4. 分别在 Windows x64 和 ARM64 运行集成验证和 WPF 启动检查。
-5. 两种架构全部通过后，为补丁 exe、更新 ZIP 和更新清单包生成本仓库的 Sigstore 证明，发布完整 Release，再通过单次 Git 分支更新切换更新源。
+4. 在 Windows x64 运行集成验证和 WPF 启动检查。
+5. 全部验证通过后，为补丁 exe、更新 ZIP 和更新清单包生成本仓库的 Sigstore 证明，发布完整 Release，再通过单次 Git 分支更新切换更新源。
 
 发布中断后重新运行工作流：草稿资产可以重试；已发布资产保持不变，从已有 `update-feed.zip` 恢复更新源发布。不会将更新源指向尚未发布完成的文件。发布报告包含原始/补丁摘要、四个修改方法和全部保留文件的摘要。
 
-当前适配基线为官方 `v2.15.1`（包含 #3673、#3676）。适配规则记录限制入口、调用方、更新器及其编译器生成方法的规范化 IL 摘要。上游改动这些方法时，即使补丁仍可写入也会停止发布，等待审查和适配。该检查覆盖已识别的实现，新增且完全独立的限制仍需人工审查；不保证任何未来上游版本都无需维护。
+仅适配本机使用的 x64 Windows，不处理 ARM64 或 32 位 x86。当前适配基线为官方 `v2.15.1`（包含 #3673、#3676）。适配规则记录限制入口、调用方、更新器及其编译器生成方法的规范化 IL 摘要。上游改动这些方法时，即使补丁仍可写入也会停止发布，等待审查和适配。该检查覆盖已识别的实现，新增且完全独立的限制仍需人工审查；不保证任何未来上游版本都无需维护。
 
 `Assess()` 及地区检测库保留。`IsRestricted` 返回 false，`Check` 返回 true，`ThrowIfRestricted` 直接返回。更新源初始化只替换源列表，并保留后续 `serverLoader` 等初始化。版本更新、下载、解压、校验及重启替换继续使用原有实现。
 
@@ -34,7 +34,7 @@ PCL 原作者为 [龙腾猫跃](https://afdian.com/a/LTCat)，PCL-CE 由 [PCL Co
 2. 在 **Sync and patch official release → Run workflow** 运行一次。`upstream_tag` 留空跟踪最新稳定版，或填写 `v2.15.1`。
 3. 首版完成后，在真实使用环境验收微软登录、正版游戏启动、CurseForge 下载和整合包安装。CI 不持有用户账号或游戏资源，无法代替这些交互验收。
 
-公开仓库可使用 `windows-11-arm` 原生 ARM64 runner；私有仓库需要可用的相应 runner。GitHub 可能在公开仓库 60 天无活动后停用定时工作流；在 Actions 中重新启用或手动运行即可恢复。
+仅支持 Intel／AMD x64 Windows，使用 `windows-latest` runner。GitHub 可能在公开仓库 60 天无活动后停用定时工作流；在 Actions 中重新启用或手动运行即可恢复。
 
 迁移仓库时先修改 `patch-config.json` 中的 `repository`，递增 `patchRevision` 后重新构建。已安装旧补丁版仍指向旧仓库，因此首次迁移需手动下载新仓库的 exe。
 

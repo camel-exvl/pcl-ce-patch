@@ -24,7 +24,7 @@ def metadata():
 
 def assets():
     return {arch: {"zipName": f"PCL_CE_Restore_{arch}.zip", "versionCode": 524,
-                   "sha256": ("1" if arch == "x64" else "2") * 64,
+                   "sha256": "1" * 64,
                    "url": f"https://github.com/camel-exvl/pcl-ce-patch/releases/download/"
                           f"v2.15.1-restored.1/PCL_CE_Restore_{arch}.zip"} for arch in release.ARCHES}
 
@@ -38,7 +38,7 @@ def zip_bytes(files):
 class ReleaseTests(unittest.TestCase):
     def test_both_protocol_channels_use_correct_stable_architecture(self):
         files = release.build_feed(metadata(), assets(), {"content": [{"id": "official-notice"}]})
-        self.assertEqual(len(files), 7)
+        self.assertEqual(len(files), 5)
         for arch in release.ARCHES:
             for channel in ("sr", "fr"):
                 item = json.loads(files[f"apiv2/updates/updates-{channel}{arch.lower()}.json"])["assets"][0]

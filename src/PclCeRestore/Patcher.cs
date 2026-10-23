@@ -34,6 +34,9 @@ public static class Patcher
         public Input(string path)
         {
             Bytes = File.ReadAllBytes(path);
+            using var host = new PEReader(new MemoryStream(Bytes));
+            Require(host.PEHeaders.CoffHeader.Machine == System.Reflection.PortableExecutable.Machine.Amd64,
+                "Only official x64 Windows executables are supported.");
             Bundle = BundleManifest.FromBytes(Bytes);
             Require(Bundle.MajorVersion == 6 && Bundle.MinorVersion == 0, "Unsupported bundle format; adaptation required.");
             Require(Bundle.Files.Select(file => file.RelativePath).Distinct().Count() == Bundle.Files.Count,

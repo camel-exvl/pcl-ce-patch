@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.IO;
 using System.Runtime.Loader;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using AsmResolver;
 using AsmResolver.DotNet;
@@ -41,6 +42,10 @@ void Assert(bool value) { if (!value) throw new Exception("Assertion failed."); 
 
 try
 {
+    Test("integration host is native x64", () =>
+    {
+        Assert(RuntimeInformation.ProcessArchitecture == Architecture.X64);
+    });
     Test("patch official binary and verify every untouched dependency and method", () =>
     {
         var report = Patcher.Patch(originalPath, output, feedBase, 1, profile);

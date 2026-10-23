@@ -20,7 +20,7 @@ import urllib.request
 import zipfile
 
 ROOT = Path(__file__).resolve().parent.parent
-ARCHES = ("x64", "ARM64")
+ARCHES = ("x64",)
 API = "https://api.github.com"
 
 
@@ -155,7 +155,7 @@ def download(metadata, output):
         data = fetch(asset["url"])
         require(sha256(data) == asset["sha256"], f"Official asset digest mismatch: {name}")
         (output / name).write_bytes(data)
-    print("Downloaded and SHA-256 checked both official architectures and Sigstore bundles")
+    print("Downloaded and SHA-256 checked the official x64 executable and Sigstore bundle")
 
 
 def write_zip(path, files):

@@ -10,7 +10,7 @@ parser.add_argument("--directory", required=True)
 args = parser.parse_args()
 root = Path(__file__).resolve().parent.parent
 config = json.loads((root / "patch-config.json").read_text(encoding="utf-8"))
-for arch in ("x64", "ARM64"):
+for arch in ("x64",):
     path = Path(args.directory) / f"PCL2_CE_Release_{arch}.exe"
     subprocess.run([sys.executable, str(root / "scripts/sigstore_local.py"), "verify", "identity",
                     "--cert-identity", config["upstreamSigstoreIdentity"],
