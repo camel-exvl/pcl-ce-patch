@@ -1,12 +1,6 @@
 {
   "content": [
     {
-      "title": "PCL CE Restore 2.15.1-restored.1",
-      "detail": "第三方补丁版：恢复 Minecraft 安装、下载与修复；程序内更新仅使用补丁版。\nhttps://github.com/camel-exvl/pcl-ce-patch/releases/tag/v2.15.1-restored.1",
-      "id": "pcl-ce-patch-2.15.1-restored.1",
-      "date": "2026-10-20T12:47:51Z"
-    },
-    {
       "title": "公告系统已上线",
       "detail": "公告系统将用于不定期投放调查问卷、安全提醒等方面。\n如果你不想被公告打扰，可以在 设置->其它->系统->启动器公告 处选择 关闭所有公告。",
       "id": "4a625783-2847-494b-b1f5-346140080a54",

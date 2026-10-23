@@ -7,5 +7,6 @@
   "officialAssets": {
     "PCL2_CE_Release_x64.exe": "168bd8369d5ed4e5478942677562913330ef1d30a5193870af910bd18198050c",
     "PCL2_CE_Release_x64.exe.sigstore.json": "1945388e1955283c4fa9112a8378d4d445c0ee44242ab4246a6f3fdf7fd01a13"
-  }
+  },
+  "notesSha256": "2fef51c47d978b02f564f9e4082cc5ab85cb67f9f6430698cdc33cd766518ef4"
 }
