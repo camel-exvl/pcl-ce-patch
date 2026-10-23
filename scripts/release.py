@@ -60,7 +60,7 @@ class GitHub:
         self.repository = repository
 
     def api(self, path, *, method="GET", data=None, missing=False, content_type=None):
-        url = path if path.startswith("https://") else f"{API}/repos/{self.repository}/{path}"
+        url = path if path.startswith("https://") else f"{API}/repos/{self.repository}" + ("/" + path if path else "")
         require(urllib.parse.urlparse(url).hostname in ("api.github.com", "uploads.github.com"),
                 "Refusing to send workflow credentials to a non-GitHub API host")
         headers = {"User-Agent": "pcl-ce-patch", "Accept": "application/vnd.github+json",
@@ -79,7 +79,7 @@ class GitHub:
         except urllib.error.HTTPError as error:
             if missing and error.code == 404:
                 return None
-            raise ValueError(f"GitHub API {method} failed with HTTP {error.code}") from None
+            raise ValueError(f"GitHub API {method} {urllib.parse.urlparse(url).path} failed with HTTP {error.code}") from None
 
 
 def feed_base(repository):
@@ -294,7 +294,8 @@ def publish_feed(github, files):
         {"path": path, "mode": "100644", "type": "blob", "content": data.decode("utf-8")}
         for path, data in sorted(files.items())]})
     commit = github.api("git/commits", method="POST", data={
-        "message": "Publish update feed " + expected["version"], "tree": tree["sha"], "parents": [parent]})
+        "message": "Publish update feed " + expected["version"], "tree": tree["sha"], "parents": [parent],
+        "author": {"name": "github-actions[bot]", "email": "41898282+github-actions[bot]@users.noreply.github.com"}})
     if ref:
         github.api("git/refs/heads/updates", method="PATCH", data={"sha": commit["sha"], "force": False})
     else:
@@ -416,5 +417,8 @@ if __name__ == "__main__":
         main()
     except (ValueError, KeyError, StopIteration, urllib.error.URLError) as error:
         # No request headers, program secrets, or upstream IL are logged.
-        print(f"Release failed: {error}", file=sys.stderr)
+        message = f"Release failed: {error}"
+        print(message, file=sys.stderr)
+        if os.environ.get("GITHUB_ACTIONS") == "true":
+            print("::error::" + message.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A"))
         sys.exit(1)

@@ -6,7 +6,7 @@ from pathlib import Path
 import tarfile
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 import zipfile
 
 SPEC = importlib.util.spec_from_file_location("release", Path(__file__).resolve().parents[1] / "scripts/release.py")
@@ -96,6 +96,13 @@ class ReleaseTests(unittest.TestCase):
     def test_credentials_cannot_be_sent_to_arbitrary_api_hosts(self):
         with self.assertRaisesRegex(ValueError, "non-GitHub"):
             release.GitHub("owner/repo").api("https://example.invalid/steal")
+
+    def test_repository_root_request_has_no_trailing_slash(self):
+        response = MagicMock()
+        response.__enter__.return_value.read.return_value = b'{"default_branch":"main"}'
+        with patch.object(release.urllib.request, "urlopen", return_value=response) as open_url:
+            release.GitHub("owner/repo").api("")
+            self.assertEqual(open_url.call_args.args[0].full_url, "https://api.github.com/repos/owner/repo")
 
     def test_update_feed_is_a_single_non_forced_branch_advance(self):
         calls = []
