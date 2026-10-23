@@ -1,5 +1,6 @@
 .tools/
 artifacts/
+work/
 **/bin/
 **/obj/
 __pycache__/
